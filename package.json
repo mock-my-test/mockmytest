@@ -1,6 +1,6 @@
 {
   "name": "@mock-my-test/mockmytest",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mocking and unit test at the same time",
   "main": "index.js",
   "scripts": {
