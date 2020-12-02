@@ -1,0 +1,19 @@
+{
+  "name": "@mock-my-test/mockmytest",
+  "version": "1.0.1",
+  "description": "Mocking and unit test at the same time",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mock-my-test/mockmytest.git"
+  },
+  "author": "Seongbeom Park",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mock-my-test/mockmytest/issues"
+  },
+  "homepage": "https://github.com/mock-my-test/mockmytest#readme"
+}
