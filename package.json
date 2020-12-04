@@ -1,0 +1,29 @@
+{
+  "name": "@mock-my-test/mockmytest",
+  "version": "1.0.4",
+  "description": "Mocking and unit test at the same time",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "npm run local",
+    "build": "tsc",
+    "pub": "npm publish --access public",
+    "local": "npm run build && npm run local --prefix test",
+    "remote": "npm run remote --prefix test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mock-my-test/mockmytest.git"
+  },
+  "keywords": [],
+  "author": "Seongbeom Park",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mock-my-test/mockmytest/issues"
+  },
+  "homepage": "https://github.com/mock-my-test/mockmytest#readme",
+  "devDependencies": {
+    "@types/node": "^14.14.10",
+    "typescript": "^4.1.2"
+  }
+}
