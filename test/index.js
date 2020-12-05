@@ -1,15 +1,22 @@
 // const test = require(process.argv[2]);
 const Game = require('./caller');
 
-const game = new Game();
-const play = (game, target_score = 5) => {
-    let play_count = 0;
-    let upper_bound = 100;
-    let lower_bound = 0;
-    while (game.score() < target_score) {
+const game_count = 500;
+const limit_guess_count = 10;
+const begin = 0, end = 100;
+const game = new Game(game_count, limit_guess_count, begin, end);
+
+game.program((_begin, _end) => {
+    let lower_bound = _begin;
+    let upper_bound = _end;
+
+    let result;
+    while ((result != Game.NEXTGAME) && (result != Game.FINISHED)) {
         let number = Math.ceil((upper_bound + lower_bound) / 2);
-        const result = game.guess(number);
-        console.log('guess number:', number, 'result:', result);
+        // let number = begin + Math.floor(Math.random() * (upper_bound - lower_bound + 1));
+        // let number = lower_bound;
+        result = game.guess(number);
+        console.log('guess', number, 'lower_bound:', lower_bound, 'upper_bound:', upper_bound, 'result:', result);
         switch (result) {
             case Game.UP:
                 lower_bound = number + 1;
@@ -17,16 +24,13 @@ const play = (game, target_score = 5) => {
             case Game.DOWN:
                 upper_bound = number - 1;
                 break;
-            case Game.CORRECT:
-                console.log('current score:', game.score());
-                upper_bound = 100;
-                lower_bound = 0;
-                play_count++
-                game.newGame();
+            default:
+                lower_bound = begin;
+                upper_bound = end;
                 break;
         }
     }
-    console.log('target score:', target_score, 'final score:', game.score(), 'play count:', play_count, 'games');
-};
-
-play(game);
+});
+console.log('score:', game.score());
+console.log('success:', game.score().filter(a => !!a).length, 'failed:', game.score().filter(a => !!!a).length)
+console.log('average:', game.score().reduce((a, b) => a + b, 0) / game.score().filter(a => a).length);

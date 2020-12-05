@@ -1,40 +1,62 @@
 const Callee = require('./callee');
+
 module.exports = class Caller {
     static UP = Callee.UP;
     static DOWN = Callee.DOWN;
-    static CORRECT = Callee.CORRECT;
-    static READY = 'READY';
-    static END = 'END'
+    static ERROR = Callee.ERROR;
+    static NEXTGAME = 'next_game';
+    static FINISHED = 'finished';
 
-    _score;
-    _try_count;
-    _max_try_count;
-    _callee;
-    _state;
-    constructor(answer, max_try_count = 4) {
-        this.reset(answer, max_try_count);
+    _callee; // random answer generator
+    _begin; // first number of random number
+    _end; // last number of random number
+    _algorithm; // programmed by the player
+    _score; // an array of _remain_guess_count for each game to find the answer
+    _game_count; // the limitation of start a new game to earn the score
+    _limit_guess_count; // the limitation of guess method can be called for each game
+    _guess_count; // the number of guess method is called
+    constructor(game_count = 5, limit_guess_count = 10, begin = 0, end = 100) {
+        this._begin = begin;
+        this._end = end;
+        this._score = [];
+        this._game_count = game_count;
+        this._limit_guess_count = limit_guess_count;
+        this.newGame();
     };
-    reset(answer, max_try_count) {
-        this._score = 0;
-        this._max_try_count = max_try_count;
-        this.newGame(answer);
-    };
-    newGame(answer) {
-        this._try_count = 0;
-        this._callee = new Callee(answer);
-        this._state = Caller.READY;
+    newGame() {
+        this._callee = new Callee(this._begin, this._end);
+        this._guess_count = 0;
     };
     guess(number) {
-        this._try_count++;
-        if (this._try_count > this._max_try_count) this._state = Caller.END;
-        const result = this._callee.guessAnswer(number);
-        if (result === Callee.CORRECT && this._state === Caller.READY) {
-            this._score++;
-            this._state = Callee.END;
+        if (this._score.length >= this._game_count) return Caller.FINISHED;
+
+        this._guess_count++;
+        if (this._guess_count > this._limit_guess_count) {
+            this._score.push(0);
+            this.newGame();
+            return Caller.NEXTGAME;
         }
-        return result;
+
+        switch (this._callee.guess(number)) {
+            case Callee.UP:
+                return Caller.UP;
+            case Callee.DOWN:
+                return Caller.DOWN;
+            case Callee.CORRECT:
+                this._score.push(this._guess_count);
+                this.newGame();
+                return Caller.NEXTGAME;
+            default:
+                return Caller.ERROR;
+        }
     };
+    program(algorithm) {
+        this._algorithm = algorithm;
+    }
     score() {
+        while (this._score.length < this._game_count) {
+            this._algorithm(this._begin, this._end);
+        }
         return this._score;
     }
 };
