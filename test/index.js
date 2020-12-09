@@ -1,16 +1,11 @@
 // const test = require(process.argv[2]);
 const Game = require('./caller');
 
-const game_count = 500;
-const limit_guess_count = 10;
-const begin = 0, end = 100;
-const game = new Game(game_count, limit_guess_count, begin, end);
+const game = Game((begin, end) => {
+    let lower_bound = begin;
+    let upper_bound = end;
 
-game.program((_begin, _end) => {
-    let lower_bound = _begin;
-    let upper_bound = _end;
-
-    let result;
+    let result = Game.UP;
     while ((result != Game.NEXTGAME) && (result != Game.FINISHED)) {
         let number = Math.ceil((upper_bound + lower_bound) / 2);
         // let number = begin + Math.floor(Math.random() * (upper_bound - lower_bound + 1));
@@ -31,6 +26,7 @@ game.program((_begin, _end) => {
         }
     }
 });
+
 console.log('score:', game.score());
 console.log('success:', game.score().filter(a => !!a).length, 'failed:', game.score().filter(a => !!!a).length)
 console.log('average:', game.score().reduce((a, b) => a + b, 0) / game.score().filter(a => a).length);
